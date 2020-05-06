@@ -5,6 +5,7 @@ public class MazeRoom {
 	private boolean south = true;
 	private boolean west = true;
 	private boolean isPlayerLocation = false;
+	private boolean isAvailable = true;
 	
 	public MazeRoom(boolean north, boolean east, boolean south, boolean west) {
 		this.north = north;
@@ -61,13 +62,16 @@ public class MazeRoom {
 			east = " *";
 		}
 		
-		if(this.isPlayerLocation) {
+		if(this.isPlayerLocation) 
 			player = "P";
-		}
 		
-		if(!this.isPlayerLocation) {
+		
+		if(!this.isPlayerLocation && this.isAvailable) 
 			player = "A";
-		}
+		
+		
+		if(!this.isPlayerLocation && !this.isAvailable)
+			player = "X";
 		
 		return west + player + east;
 			
