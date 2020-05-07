@@ -5,7 +5,5 @@ public class ExitRoom extends MazeRoom{
 		super(true, false, false, true);
 		
 	}
-	
-	
 
 }

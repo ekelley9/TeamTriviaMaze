@@ -38,42 +38,45 @@ public class MazeRoom {
 	}
 	
 	public String roomMid() {
-		String west = "";
-		String east = "";
-		String player = "";
+		String westString = "";
+		String eastString = "";
+		String playerString = "";
 		
 		if(this.west && this.east) {
-			west = "| ";
-			east = " |";
+			westString = "| ";
+			eastString = " |";
 		}
 		
 		if(this.west && !this.east) {
-			west = "| ";
-			east = " *";
+			westString = "| ";
+			eastString = " *";
 		}
 		
 		if(!this.west && this.east) {
-			west = "* ";
-			east = " |";
+			westString = "* ";
+			eastString = " |";
 		}
 		
 		if(!this.west && !this.east) {
-			west = "* ";
-			east = " *";
+			westString = "* ";
+			eastString = " *";
 		}
 		
 		if(this.isPlayerLocation) 
-			player = "P";
+			playerString = "P";
 		
 		
 		if(!this.isPlayerLocation && this.isAvailable) 
-			player = "A";
+			playerString = "A";
 		
 		
 		if(!this.isPlayerLocation && !this.isAvailable)
-			player = "X";
+			playerString = "X";
 		
-		return west + player + east;
+		if(!this.south && !this.east)
+			playerString = "E";
+		
+		return westString + playerString + eastString;
 			
 	}
 	
@@ -84,7 +87,7 @@ public class MazeRoom {
 		return "* * *";
 	}
 	
-	public void setPlayer(boolean isPlayer) {
+	public void setPlayerLocation(boolean isPlayer) {
 		this.isPlayerLocation = isPlayer;
 	}
 	

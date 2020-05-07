@@ -1,8 +1,8 @@
+import java.util.Scanner;
 
 public class TriviaMaze {
-	private int playerRow = 0;
-	private int playerCol = 0;
 	private MazeRoom[][] theMaze;
+	Scanner input = new Scanner(System.in);
 
 	public TriviaMaze(int row, int column) {
 		this.theMaze = new MazeRoom[row][column];
@@ -12,7 +12,7 @@ public class TriviaMaze {
 			}
 		}
 		this.addBorders();
-		this.theMaze[0][0].setPlayer(true);
+		this.theMaze[0][0].setPlayerLocation(true);
 		this.theMaze[row-1][column-1] = new ExitRoom();
 	}
 
@@ -47,5 +47,39 @@ public class TriviaMaze {
 
 		}
 	}
-
+	
+	public void move(Player player) {
+		
+		Boolean validOperand = true;
+		System.out.print("Move (WASD): ");
+		String direction = input.nextLine();
+		
+		this.theMaze[player.getPlayerRow()][player.getPlayerCol()].setPlayerLocation(false);
+		
+		do {
+			if(direction.equalsIgnoreCase("w"))
+				player.setPlayerRow(player.getPlayerRow()-1);
+			else if(direction.equalsIgnoreCase("a"))
+				player.setPlayerCol(player.getPlayerCol()-1);
+			else if(direction.equalsIgnoreCase("s"))
+				player.setPlayerRow(player.getPlayerRow()+1);
+			else if(direction.equalsIgnoreCase("d"))
+				player.setPlayerCol(player.getPlayerCol()+1);
+			else {
+				System.out.println("Not a valid direction operand: please enter again");
+				validOperand = false;
+			}
+		} while(validOperand == false);
+		
+		this.theMaze[player.getPlayerRow()][player.getPlayerCol()].setPlayerLocation(true);
+	}
+	
+	public void printGameRules() {
+		System.out.println("\n --------------------------------------------------------------------------------------------");
+		System.out.println(" -                          Using the 'WASD' pad navigate the maze                          -");
+		System.out.println(" -    In each room you will be asked a trivia question, answer them correctly to move on    -");
+		System.out.println(" -                If you fail to answer correctly the path will be blocked!                 -");
+		System.out.println(" -                      Reach the 'E' before blocking all paths to win                      -");
+		System.out.println(" --------------------------------------------------------------------------------------------\n");
+	}
 }
