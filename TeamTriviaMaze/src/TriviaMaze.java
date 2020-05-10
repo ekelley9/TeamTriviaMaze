@@ -49,29 +49,32 @@ public class TriviaMaze {
 	}
 	
 	public void move(Player player) {
-		
-		Boolean validOperand = true;
-		System.out.print("Move (WASD): ");
-		String direction = input.nextLine();
-		
-		this.theMaze[player.getPlayerRow()][player.getPlayerCol()].setPlayerLocation(false);
-		
+		int row = player.getPlayerRow();
+		int col = player.getPlayerCol();
+		this.theMaze[row][col].setPlayerLocation(false);
+
+		Boolean validOperand;
 		do {
-			if(direction.equalsIgnoreCase("w"))
-				player.setPlayerRow(player.getPlayerRow()-1);
-			else if(direction.equalsIgnoreCase("a"))
-				player.setPlayerCol(player.getPlayerCol()-1);
-			else if(direction.equalsIgnoreCase("s"))
-				player.setPlayerRow(player.getPlayerRow()+1);
-			else if(direction.equalsIgnoreCase("d"))
-				player.setPlayerCol(player.getPlayerCol()+1);
+			validOperand = true;
+			System.out.print("Move (WASD): ");
+			String direction = input.nextLine();
+			if(direction.equalsIgnoreCase("w") && row-1 >= 0)
+				row--;
+			else if(direction.equalsIgnoreCase("a") && col-1 >= 0)
+				col--;
+			else if(direction.equalsIgnoreCase("s") && row+1 < this.theMaze.length)
+				row++;
+			else if(direction.equalsIgnoreCase("d") && col+1 < this.theMaze.length)
+				col++;
 			else {
 				System.out.println("Not a valid direction operand: please enter again");
 				validOperand = false;
 			}
 		} while(validOperand == false);
-		
-		this.theMaze[player.getPlayerRow()][player.getPlayerCol()].setPlayerLocation(true);
+
+		player.setPlayerRow(row);
+		player.setPlayerCol(col);
+		this.theMaze[row][col].setPlayerLocation(true);
 	}
 	
 	public void printGameRules() {
