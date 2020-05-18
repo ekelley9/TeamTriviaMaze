@@ -13,19 +13,22 @@ public class TriviaMaze {
 		}
 		this.addBorders();
 		this.theMaze[0][0].setPlayerLocation(true);
-		this.theMaze[row-1][column-1] = new ExitRoom();
+		
 	}
 
 	public void addBorders() {
+		int length = theMaze.length -1;
 		for (int i = 0; i < theMaze.length; i++) {
 			theMaze[0][i] = new MazeRoom(false, true, true, true);
-			theMaze[theMaze[i].length - 1][i] = new MazeRoom(true, true, false, false);
+			theMaze[length][i] = new MazeRoom(true, true, false, true);
 			theMaze[i][0] = new MazeRoom(true, true, true, false);
-			theMaze[i][theMaze[i].length - 1] = new MazeRoom(true, false, true, true);
+			theMaze[i][theMaze[length].length-1] = new MazeRoom(true, false, true, true);
 		}
 
-		theMaze[0][theMaze[1].length - 1] = new MazeRoom(false, false, true, true);
-		theMaze[theMaze[1].length - 1][0] = new MazeRoom(true, true, false, false);
+		theMaze[0][0] = new MazeRoom(false, true, true, false);
+		theMaze[0][theMaze[length].length-1] = new MazeRoom(false, false, true, true);
+		theMaze[length][0] = new MazeRoom(true, true, false, false);
+		this.theMaze[length][theMaze[length].length-1] = new ExitRoom();
 
 	}
 
