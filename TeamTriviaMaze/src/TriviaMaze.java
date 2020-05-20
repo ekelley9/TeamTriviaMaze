@@ -16,6 +16,7 @@ public class TriviaMaze {
 		
 	}
 
+	//Overrides the Maze walls at the border of the Maze so it prints correctly
 	public void addBorders() {
 		int length = theMaze.length -1;
 		for (int i = 0; i < theMaze.length; i++) {
@@ -31,7 +32,8 @@ public class TriviaMaze {
 		this.theMaze[length][theMaze[length].length-1] = new ExitRoom();
 
 	}
-
+	
+	//Prints out the maze based on the room objects toString
 	public void printMaze() {
 
 		for (int i = 0; i < this.theMaze.length; i++) {
@@ -51,6 +53,7 @@ public class TriviaMaze {
 		}
 	}
 	
+	//Moves the player around the maze by using the Player object
 	public void move(Player player) {
 		int row = player.getPlayerRow();
 		int col = player.getPlayerCol();
@@ -80,6 +83,7 @@ public class TriviaMaze {
 		this.theMaze[row][col].setPlayerLocation(true);
 	}
 	
+	//Prints the rules to the Trivia maze
 	public void printGameRules() {
 		System.out.println("\n --------------------------------------------------------------------------------------------");
 		System.out.println(" -                          Using the 'WASD' pad navigate the maze                          -");
@@ -87,5 +91,19 @@ public class TriviaMaze {
 		System.out.println(" -                If you fail to answer correctly the path will be blocked!                 -");
 		System.out.println(" -                      Reach the 'E' before blocking all paths to win                      -");
 		System.out.println(" --------------------------------------------------------------------------------------------\n");
+	}
+	
+	//Used to see if a path to the exit room still exists returns true if so
+	public boolean mazeParser() {
+		return true;
+	}
+	
+	//clears the searched fields for each room in the maze setting them to false
+	public void clearSearched() {
+		for(int row = 0; row < this.theMaze.length-1; row++) {
+			for(int column = 0; column < this.theMaze[row].length-1; column++) {
+				this.theMaze[row][column].setSearched(false);
+			}
+		}
 	}
 }
