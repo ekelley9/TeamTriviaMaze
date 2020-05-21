@@ -13,10 +13,13 @@ public class TriviaMaze {
 		}
 		this.addBorders();
 		this.theMaze[0][0].setPlayerLocation(true);
+		if(this.theMaze[this.theMaze.length-1][this.theMaze.length-1] instanceof ExitRoom) {
+			System.out.println("It is");
+		}
 		
 	}
 
-	//Overrides the Maze walls at the border of the Maze so it prints correctly
+	//Overrides the Maze walls at the border of the Maze so it prints/functions correctly
 	public void addBorders() {
 		int length = theMaze.length -1;
 		for (int i = 0; i < theMaze.length; i++) {
@@ -94,10 +97,34 @@ public class TriviaMaze {
 	}
 	
 	//Used to see if a path to the exit room still exists returns true if so
-	public boolean mazeParser() {
-		return true;
+	public boolean mazeParser(int row, int column) {
+		boolean pathExists = false;
+		if (!this.theMaze[row][column].getSearched()) {
+			this.theMaze[row][column].setSearched(true);
+		}
+		if (this.theMaze[row][column] instanceof ExitRoom) {
+			pathExists = true;
+		} else
+			this.theMaze[row][column].setSearched(true);
+		if (this.theMaze[row][column].isDoor('n') && this.theMaze[row - 1][column].getSearched() == false) {
+			System.out.println("Moved north");
+			pathExists = mazeParser(row - 1, column);
+		}
+		if (this.theMaze[row][column].isDoor('e') && this.theMaze[row][column + 1].getSearched() == false) {
+			System.out.println("Moved east");
+			pathExists = mazeParser(row, column + 1);
+		}
+		if (this.theMaze[row][column].isDoor('s') && this.theMaze[row + 1][column].getSearched() == false) {
+			System.out.println("Moved South");
+			pathExists = mazeParser(row + 1, column);
+		}
+		if (this.theMaze[row][column].isDoor('w') && this.theMaze[row][column - 1].getSearched() == false) {
+			System.out.println("Moved west");
+			pathExists = mazeParser(row, column - 1);
+		}
+		return pathExists;
 	}
-	
+
 	//clears the searched fields for each room in the maze setting them to false
 	public void clearSearched() {
 		for(int row = 0; row < this.theMaze.length-1; row++) {

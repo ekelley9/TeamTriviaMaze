@@ -30,7 +30,7 @@ public class MazeRoom {
 			return this.south;
 		
 		if(direction == 'w')
-			return this.south;
+			return this.west;
 		
 		return false;
 	}
