@@ -35,6 +35,20 @@ public class MazeRoom {
 		return false;
 	}
 	
+	public void closeDoor(char direction) {
+		if(direction == 'n') 
+			this.north = false;
+		
+		if(direction == 's')
+			this.south = false;
+			
+		if(direction == 'e')
+			this.east = false;
+		
+		if(direction == 'w')
+			this.west = false;
+	}
+	
 	//gets the searched boolean for the room used in the maze path algorithm
 	public boolean getSearched() {
 		return this.searched;
