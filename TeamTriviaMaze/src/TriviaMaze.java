@@ -96,7 +96,7 @@ public class TriviaMaze {
 		System.out.println(" --------------------------------------------------------------------------------------------\n");
 	}
 	
-	//used to as a helper to the maze parser method takes a players current position and passes it to the mazeParser
+	//used as a helper to the maze parser method takes a players current position and passes it to the mazeParser
 	public boolean mazeParserHelper(Player curPlayer) {
 		int row = curPlayer.getPlayerRow();
 		int column = curPlayer.getPlayerCol();
@@ -138,6 +138,7 @@ public class TriviaMaze {
 		return pathExists;
 	}
 	
+	//used to close a path when the player gets a question wrong
 	public void closePath(char direction, Player curPlayer) {
 		int curRow = curPlayer.getPlayerRow();
 		int curColumn = curPlayer.getPlayerCol();
