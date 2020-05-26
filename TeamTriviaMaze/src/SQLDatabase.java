@@ -149,7 +149,7 @@ public class SQLDatabase {
 		try {
 			this.queryResult = this.curStatement.executeQuery("Select max(QUESTION_ID) from MultipleChoice");
 			
-			maxNum = this.queryResult.getInt("QUESTION_ID");
+			maxNum = this.queryResult.getInt(1);
 			
 			queryToReturn = this.rand.nextInt(maxNum)+1;
 			
@@ -187,7 +187,7 @@ public class SQLDatabase {
 		try {
 			this.queryResult = this.curStatement.executeQuery("Select max(QUESTION_ID) from TrueFalse");
 		
-			queryToReturn = this.rand.nextInt(queryResult.getInt("QUESTION_ID"))+1;
+			queryToReturn = this.rand.nextInt(queryResult.getInt(1))+1;
 			
 			this.queryResult = this.curStatement.executeQuery(query+queryToReturn+";");
 			
@@ -220,7 +220,7 @@ public class SQLDatabase {
 		try {
 			this.queryResult = this.curStatement.executeQuery("Select max(QUESTION_ID) from TrueFalse");
 		
-			queryToReturn = this.rand.nextInt(queryResult.getInt("QUESTION_ID"))+1;
+			queryToReturn = this.rand.nextInt(queryResult.getInt(1))+1;
 			
 			this.queryResult = this.curStatement.executeQuery(query+queryToReturn+";");
 			
