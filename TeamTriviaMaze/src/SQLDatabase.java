@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.util.*;
+import java.io.*;
 
 public class SQLDatabase {
 	
@@ -8,6 +9,19 @@ public class SQLDatabase {
 	private Statement curStatement = null;
 	private ResultSet queryResult = null;
 	private Random rand = new Random();
+	
+	//EVC Constructor that makes a database with the specified string
+	public SQLDatabase(String database) {
+		try {
+			Class.forName("org.sqlite.JDBC");
+			this.curConection = DriverManager.getConnection("jdbc:sqlite:"+ database +".db");
+			this.curStatement = this.curConection.createStatement();
+			this.createTables();
+		}catch(Exception e) {
+			System.out.println(e.getClass().getName() +": "+ e.getMessage());
+		}
+		System.out.println("Table made correctly");
+	}
 	
 	//Constructor sets the connection to the database TriviQuestionsDB.db
 	public SQLDatabase() {
@@ -281,25 +295,145 @@ public class SQLDatabase {
 		
 	}
 	
-	//For testing purposes only
+	// For testing purposes only
 	public void testTables() {
 		try {
 			this.queryResult = curStatement.executeQuery("Select * from MultipleChoice;");
-			
-			System.out.println("QUESTION_ID\t QUESTION\t WRONG_ANSWER1\t WRONG_ANSWER2\t CORRECT_ANSWER");
-			while(this.queryResult.next()) {
+
+			System.out.println("\nQUESTION_ID\t QUESTION\t WRONG_ANSWER1\t WRONG_ANSWER2\t CORRECT_ANSWER");
+			while (this.queryResult.next()) {
 				int id = this.queryResult.getInt("QUESTION_ID");
 				String question = this.queryResult.getString("QUESTION");
 				String wrongAnswer1 = this.queryResult.getString("WRONG_ANSWER1");
 				String wrongAnswer2 = this.queryResult.getString("WRONG_ANSWER2");
 				String answer = this.queryResult.getString("CORRECT_ANSWER");
-				System.out.println(id + "\t "+ question + "\t "+ wrongAnswer1 + "\t"+ wrongAnswer2+ "\t" + answer);
+				System.out.println(id + "\t " + question + "\t " + wrongAnswer1 + "\t" + wrongAnswer2 + "\t" + answer);
 			}
 			
-		}catch(SQLException e) {
+			this.queryResult = curStatement.executeQuery("Select * from TrueFalse;");
+
+			System.out.println("\nQUESTION_ID\t QUESTION\t CORRECT_ANSWER");
+			while (this.queryResult.next()) {
+				int id = this.queryResult.getInt("QUESTION_ID");
+				String question = this.queryResult.getString("QUESTION");
+				String answer = this.queryResult.getString("CORRECT_ANSWER");
+				System.out.println(id + "\t " + question + "\t" + answer);
+			}
+			
+			this.queryResult = curStatement.executeQuery("Select * from ShortAnswer;");
+
+			System.out.println("\nQUESTION_ID\t QUESTION\t CORRECT_ANSWER");
+			while (this.queryResult.next()) {
+				int id = this.queryResult.getInt("QUESTION_ID");
+				String question = this.queryResult.getString("QUESTION");
+				String answer = this.queryResult.getString("CORRECT_ANSWER");
+				System.out.println(id + "\t " + question + "\t" + answer);
+			}
+
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	// Reads questions from a file and adds them to the Multiple choice table
+	public void addMultipleChoiceFile(String fileName) {
+		String question = "";
+		String wrongAnswer1 = "";
+		String wrongAnswer2 = "";
+		String correctAnswer = "";
+		String toInsert = "";
+		File file = new File(fileName);
+		try {
+			Scanner fin = new Scanner(file);
+			while (fin.hasNextLine()) {
+
+				question = fin.nextLine();
+
+				wrongAnswer1 = fin.nextLine();
+
+				wrongAnswer2 = fin.nextLine();
+
+				correctAnswer = fin.nextLine();
+
+				toInsert = "Insert into MultipleChoice (QUESTION, WRONG_ANSWER1, WRONG_ANSWER2, CORRECT_ANSWER)"
+						+ "Values(" + "\"" + question + "\", " + "\"" + wrongAnswer1 + "\", " + "\"" + wrongAnswer2
+						+ "\", " + "\"" + correctAnswer + "\");";
+
+				try {
+					this.curStatement.executeUpdate(toInsert);
+					System.out.println("New tuple successfully inserted!");
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+			fin.close();
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+	}
+	
+	// Reads questions from a file and adds them to the TrueFalse table
+		public void addTrueFalseFile(String fileName) {
+			String question = "";
+			String correctAnswer = "";
+			String toInsert = "";
+			File file = new File(fileName);
+			try {
+				Scanner fin = new Scanner(file);
+				while (fin.hasNextLine()) {
+
+					question = fin.nextLine();
+
+					correctAnswer = fin.nextLine();
+
+					toInsert = "Insert into TrueFalse (QUESTION, CORRECT_ANSWER)"
+							+ "Values(" + "\"" + question + "\", " + "\"" + correctAnswer + "\");";
+
+					try {
+						this.curStatement.executeUpdate(toInsert);
+						System.out.println("New tuple successfully inserted!");
+					} catch (SQLException e) {
+						System.out.println(e.getMessage());
+					}
+				}
+				fin.close();
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
+
+		}
+		
+		// Reads questions from a file and adds them to the ShortAnswer table
+				public void addShortAnswerFile(String fileName) {
+					String question = "";
+					String correctAnswer = "";
+					String toInsert = "";
+					File file = new File(fileName);
+					try {
+						Scanner fin = new Scanner(file);
+						while (fin.hasNextLine()) {
+
+							question = fin.nextLine();
+
+							correctAnswer = fin.nextLine();
+
+							toInsert = "Insert into ShortAnswer (QUESTION, CORRECT_ANSWER)"
+									+ "Values(" + "\"" + question + "\", " + "\"" + correctAnswer + "\");";
+
+							try {
+								this.curStatement.executeUpdate(toInsert);
+								System.out.println("New tuple successfully inserted!");
+							} catch (SQLException e) {
+								System.out.println(e.getMessage());
+							}
+						}
+						fin.close();
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					}
+
+				}
 	
 	
 }
