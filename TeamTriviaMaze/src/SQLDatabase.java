@@ -295,22 +295,42 @@ public class SQLDatabase {
 		
 	}
 	
-	//For testing purposes only
+	// For testing purposes only
 	public void testTables() {
 		try {
 			this.queryResult = curStatement.executeQuery("Select * from MultipleChoice;");
-			
-			System.out.println("QUESTION_ID\t QUESTION\t WRONG_ANSWER1\t WRONG_ANSWER2\t CORRECT_ANSWER");
-			while(this.queryResult.next()) {
+
+			System.out.println("\nQUESTION_ID\t QUESTION\t WRONG_ANSWER1\t WRONG_ANSWER2\t CORRECT_ANSWER");
+			while (this.queryResult.next()) {
 				int id = this.queryResult.getInt("QUESTION_ID");
 				String question = this.queryResult.getString("QUESTION");
 				String wrongAnswer1 = this.queryResult.getString("WRONG_ANSWER1");
 				String wrongAnswer2 = this.queryResult.getString("WRONG_ANSWER2");
 				String answer = this.queryResult.getString("CORRECT_ANSWER");
-				System.out.println(id + "\t "+ question + "\t "+ wrongAnswer1 + "\t"+ wrongAnswer2+ "\t" + answer);
+				System.out.println(id + "\t " + question + "\t " + wrongAnswer1 + "\t" + wrongAnswer2 + "\t" + answer);
 			}
 			
-		}catch(SQLException e) {
+			this.queryResult = curStatement.executeQuery("Select * from TrueFalse;");
+
+			System.out.println("\nQUESTION_ID\t QUESTION\t CORRECT_ANSWER");
+			while (this.queryResult.next()) {
+				int id = this.queryResult.getInt("QUESTION_ID");
+				String question = this.queryResult.getString("QUESTION");
+				String answer = this.queryResult.getString("CORRECT_ANSWER");
+				System.out.println(id + "\t " + question + "\t" + answer);
+			}
+			
+			this.queryResult = curStatement.executeQuery("Select * from ShortAnswer;");
+
+			System.out.println("\nQUESTION_ID\t QUESTION\t CORRECT_ANSWER");
+			while (this.queryResult.next()) {
+				int id = this.queryResult.getInt("QUESTION_ID");
+				String question = this.queryResult.getString("QUESTION");
+				String answer = this.queryResult.getString("CORRECT_ANSWER");
+				System.out.println(id + "\t " + question + "\t" + answer);
+			}
+
+		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
 	}
