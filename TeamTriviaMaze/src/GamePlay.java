@@ -15,7 +15,6 @@ public class GamePlay {
 			testMaze.printMaze();
 			testMaze.move(player);
 			questions.menuSelect();
-			questions.isAnswerCorrect(); //hard coded for now, change this to read solution from sqlite
 		}
 		
 		System.out.println("You win!");
