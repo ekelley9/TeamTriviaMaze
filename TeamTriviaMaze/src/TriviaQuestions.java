@@ -29,7 +29,7 @@ public class TriviaQuestions {
 	
 	public boolean printTrueOrFalseMenu() {
 		ArrayList<String> trueFalse = database.getTrueFalse();
-		String answer = trueFalse.get(trueFalse.size());
+		String answer = trueFalse.get(trueFalse.size()-1);
 		String question = trueFalse.get(0);
 		
 		System.out.println("True or False");
@@ -42,7 +42,7 @@ public class TriviaQuestions {
 	public boolean printMultipleChoiceMenu() {
 		ArrayList<String> multipleChoice = database.getMultipleChoice();
 		String question = multipleChoice.get(0);
-		String answer = multipleChoice.get(multipleChoice.size());
+		String answer = multipleChoice.get(multipleChoice.size()-1);
 		multipleChoice.remove(0);
 		Collections.shuffle(multipleChoice);
 		
@@ -56,7 +56,7 @@ public class TriviaQuestions {
 	
 	public boolean printShortAnswerMenu() {
 		ArrayList<String> shortAnswer = database.getShortAnswer();
-		String answer = shortAnswer.get(shortAnswer.size());
+		String answer = shortAnswer.get(shortAnswer.size()-1);
 		String question = shortAnswer.get(0);
 		
 		System.out.println("Enter correct answer");

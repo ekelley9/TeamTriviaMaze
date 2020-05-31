@@ -13,9 +13,9 @@ public class GamePlay {
 		
 		while(player.getPlayerRow() != 3 || player.getPlayerCol() != 3) {
 			testMaze.printMaze();
-			testMaze.move(player);
-			questions.menuSelect();
-			questions.isAnswerCorrect(); //hard coded for now, change this to read solution from sqlite
+			if(questions.menuSelect())
+				testMaze.move(player);
+			
 		}
 		
 		System.out.println("You win!");
