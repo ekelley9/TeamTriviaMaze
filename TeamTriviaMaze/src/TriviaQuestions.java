@@ -64,12 +64,12 @@ public class TriviaQuestions {
 		
 		String playerAnswer = input.nextLine();
 		
-		return answer.equals(playerAnswer);
+		return answer.equalsIgnoreCase(playerAnswer);
 	}
 	
 	public boolean isAnswerCorrect(String answer, ArrayList<String> answerSet) {
 		int playerAnswer = input.nextInt();
 		
-		return answer.equals(answerSet.get(playerAnswer-1));
+		return answer.equalsIgnoreCase(answerSet.get(playerAnswer-1));
 	}
 }
