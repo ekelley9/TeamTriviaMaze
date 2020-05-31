@@ -14,32 +14,35 @@ public class TriviaQuestions {
 	}
 	
 	// calls the appropriate menu for a random question type
-	public void menuSelect() {
+	public boolean menuSelect() {
 		int randomNum = chance.nextInt(3);
 		
 		if(randomNum == 0)
-			printTrueOrFalseMenu();
+			return printTrueOrFalseMenu();
 		else if(randomNum == 1) 
-			printMultipleChoiceMenu();
+			return printMultipleChoiceMenu();
 		else if(randomNum == 2)
-			printShortAnswerMenu();
+			return printShortAnswerMenu();
 		else
 			throw new IllegalArgumentException("Yoo your random didnt work :/"); 
 	}
 	
-	public void printTrueOrFalseMenu() {
+	public boolean printTrueOrFalseMenu() {
 		ArrayList<String> trueFalse = database.getTrueFalse();
+		String answer = trueFalse.get(trueFalse.size());
 		String question = trueFalse.get(0);
 		
 		System.out.println("True or False");
 		System.out.println(question);
 		System.out.println("1. True");
 		System.out.println("2. False");
+		return isAnswerCorrect(answer, trueFalse);
 	}
 	
-	public void printMultipleChoiceMenu() {
+	public boolean printMultipleChoiceMenu() {
 		ArrayList<String> multipleChoice = database.getMultipleChoice();
 		String question = multipleChoice.get(0);
+		String answer = multipleChoice.get(multipleChoice.size());
 		multipleChoice.remove(0);
 		Collections.shuffle(multipleChoice);
 		
@@ -48,22 +51,25 @@ public class TriviaQuestions {
 		System.out.println("1. " + multipleChoice.get(0));
 		System.out.println("2. " + multipleChoice.get(1));
 		System.out.println("3. " + multipleChoice.get(2));
+		return isAnswerCorrect(answer, multipleChoice);
 	}
 	
-	public void printShortAnswerMenu() {
+	public boolean printShortAnswerMenu() {
 		ArrayList<String> shortAnswer = database.getShortAnswer();
+		String answer = shortAnswer.get(shortAnswer.size());
 		String question = shortAnswer.get(0);
 		
 		System.out.println("Enter correct answer");
 		System.out.println(question);
+		
+		String playerAnswer = input.nextLine();
+		
+		return answer.equals(playerAnswer);
 	}
 	
-	public boolean isAnswerCorrect(int solution) {
+	public boolean isAnswerCorrect(String answer, ArrayList<String> answerSet) {
 		int playerAnswer = input.nextInt();
 		
-		if(playerAnswer == solution)
-			return true;
-		else
-			return false;
+		return answer.equals(answerSet.get(playerAnswer));
 	}
 }
