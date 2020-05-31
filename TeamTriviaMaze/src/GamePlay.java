@@ -1,5 +1,5 @@
 import java.util.Scanner;
-public class Test {
+public class GamePlay {
 
 	public static void main(String[] args) {
 		
@@ -9,14 +9,16 @@ public class Test {
 		database.testTables();
 		TriviaQuestions questions = new TriviaQuestions(database);
 		Player player = new Player();
+		String direction;
+		Boolean shouldMove = false;
 		
 		testMaze.printGameRules();
 		
 		while(player.getPlayerRow() != 3 || player.getPlayerCol() != 3) {
 			testMaze.printMaze();
-			testMaze.move(player);
+			direction = testMaze.moveSelect();
+			testMaze.move(player, direction);
 			questions.menuSelect();
-			questions.isAnswerCorrect(1); //hard coded for now, change this to read solution from sqlite
 		}
 		
 		System.out.println("You win!");
