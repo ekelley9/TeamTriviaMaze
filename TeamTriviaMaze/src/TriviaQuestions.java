@@ -31,12 +31,26 @@ public class TriviaQuestions {
 		ArrayList<String> trueFalse = database.getTrueFalse();
 		String answer = trueFalse.get(trueFalse.size()-1);
 		String question = trueFalse.get(0);
+		boolean validAnswer = true;
 		
 		System.out.println("True or False");
 		System.out.println(question);
 		System.out.println("1. True");
 		System.out.println("2. False");
-		return isAnswerCorrect(answer, trueFalse);
+		
+		do {
+			int playerAnswer = Integer.parseInt(input.nextLine());
+			if(playerAnswer == 1)
+				return answer.equals("True");
+			else if(playerAnswer == 2)
+				return answer.equals("False");
+			else {
+				System.out.println("Not a valid answer");
+				validAnswer = false;
+			}
+		}while(validAnswer == false);
+		
+		return false;
 	}
 	
 	public boolean printMultipleChoiceMenu() {
@@ -51,7 +65,8 @@ public class TriviaQuestions {
 		System.out.println("1. " + multipleChoice.get(0));
 		System.out.println("2. " + multipleChoice.get(1));
 		System.out.println("3. " + multipleChoice.get(2));
-		return isAnswerCorrect(answer, multipleChoice);
+		int playerAnswer = Integer.parseInt(input.nextLine());
+		return answer.equals(multipleChoice.get(playerAnswer-1));
 	}
 	
 	public boolean printShortAnswerMenu() {
@@ -61,15 +76,8 @@ public class TriviaQuestions {
 		
 		System.out.println("Enter correct answer");
 		System.out.println(question);
-		
 		String playerAnswer = input.nextLine();
 		
-		return answer.equals(playerAnswer);
-	}
-	
-	public boolean isAnswerCorrect(String answer, ArrayList<String> answerSet) {
-		int playerAnswer = input.nextInt();
-		
-		return answer.equals(answerSet.get(playerAnswer-1));
+		return answer.equalsIgnoreCase(playerAnswer);
 	}
 }
