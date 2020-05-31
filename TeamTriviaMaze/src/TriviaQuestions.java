@@ -70,6 +70,6 @@ public class TriviaQuestions {
 	public boolean isAnswerCorrect(String answer, ArrayList<String> answerSet) {
 		int playerAnswer = input.nextInt();
 		
-		return answer.equals(answerSet.get(playerAnswer));
+		return answer.equals(answerSet.get(playerAnswer-1));
 	}
 }
