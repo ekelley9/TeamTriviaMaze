@@ -56,8 +56,13 @@ public class TriviaMaze {
 		}
 	}
 	
+	public String moveSelect() {
+		System.out.print("Move (WASD): ");
+		return input.nextLine();
+	}
+	
 	//Moves the player around the maze by using the Player object
-	public void move(Player player) {
+	public void move(Player player, String direction) {
 		int row = player.getPlayerRow();
 		int col = player.getPlayerCol();
 		this.theMaze[row][col].setPlayerLocation(false);
@@ -65,8 +70,6 @@ public class TriviaMaze {
 		Boolean validOperand;
 		do {
 			validOperand = true;
-			System.out.print("Move (WASD): ");
-			String direction = input.nextLine();
 			if(direction.equalsIgnoreCase("w") && row-1 >= 0)
 				row--;
 			else if(direction.equalsIgnoreCase("a") && col-1 >= 0)
@@ -77,6 +80,7 @@ public class TriviaMaze {
 				col++;
 			else {
 				System.out.println("Not a valid direction operand: please enter again");
+				direction = moveSelect();
 				validOperand = false;
 			}
 		} while(validOperand == false);

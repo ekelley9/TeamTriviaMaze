@@ -9,13 +9,17 @@ public class GamePlay {
 		SQLDatabase database = new SQLDatabase();
 		TriviaQuestions questions = new TriviaQuestions(database);
 		Player player = new Player();
+		String direction;
 
 		testMaze.printGameRules();
 
 		while (player.getPlayerRow() != 3 || player.getPlayerCol() != 3) {
 			testMaze.printMaze();
-			testMaze.move(player);
-			questions.menuSelect();
+			direction = testMaze.moveSelect();
+			if(questions.menuSelect() == false)
+				testMaze.closePath(direction.charAt(0), player);
+			else
+				testMaze.move(player, direction);
 		}
 
 		System.out.println("You win!");
