@@ -65,18 +65,19 @@ public class TriviaMaze {
 	public void move(Player player, String direction) {
 		int row = player.getPlayerRow();
 		int col = player.getPlayerCol();
+		MazeRoom curRoom = this.theMaze[row][col];
 		this.theMaze[row][col].setPlayerLocation(false);
 
 		Boolean validOperand;
 		do {
 			validOperand = true;
-			if(direction.equalsIgnoreCase("w") && row-1 >= 0)
+			if(direction.equalsIgnoreCase("w") && curRoom.isDoor('n'))
 				row--;
-			else if(direction.equalsIgnoreCase("a") && col-1 >= 0)
+			else if(direction.equalsIgnoreCase("a") && curRoom.isDoor('w'))
 				col--;
-			else if(direction.equalsIgnoreCase("s") && row+1 < this.theMaze.length)
+			else if(direction.equalsIgnoreCase("s") && curRoom.isDoor('s'))
 				row++;
-			else if(direction.equalsIgnoreCase("d") && col+1 < this.theMaze.length)
+			else if(direction.equalsIgnoreCase("d") && curRoom.isDoor('e'))
 				col++;
 			else {
 				System.out.println("Not a valid direction operand: please enter again");
