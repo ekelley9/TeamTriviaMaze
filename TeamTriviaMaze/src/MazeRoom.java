@@ -20,16 +20,16 @@ public class MazeRoom {
 	
 	//returns whether the specified direction is a door
 	public boolean isDoor(char direction) {
-		if(direction == 'n')
+		if(direction == 'w')
 			return this.north;
 		
-		if(direction == 'e')
+		if(direction == 'd')
 			return this.east;
 		
 		if(direction == 's')
 			return this.south;
 		
-		if(direction == 'w')
+		if(direction == 'a')
 			return this.west;
 		
 		return false;
@@ -104,7 +104,7 @@ public class MazeRoom {
 		if(!this.isPlayerLocation && !this.isAvailable)
 			playerString = "X";
 		
-		if(!this.south && !this.east)
+		if(this instanceof ExitRoom)
 			playerString = "E";
 		
 		return westString + playerString + eastString;

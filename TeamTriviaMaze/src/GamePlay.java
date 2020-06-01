@@ -6,8 +6,6 @@ public class GamePlay {
 
 		TriviaMaze testMaze = new TriviaMaze(4, 4);
 		testMaze.printMaze();
-		SQLDatabase database = new SQLDatabase();
-		TriviaQuestions questions = new TriviaQuestions(database);
 		Player player = new Player();
 		String direction;
 
@@ -16,10 +14,8 @@ public class GamePlay {
 		while (player.getPlayerRow() != 3 || player.getPlayerCol() != 3) {
 			testMaze.printMaze();
 			direction = testMaze.moveSelect();
-			if(questions.menuSelect() == false)
-				testMaze.closePath(direction.charAt(0), player);
-			else
-				testMaze.move(player, direction);
+			testMaze.move(player, direction);
+			
 		}
 
 		System.out.println("You win!");

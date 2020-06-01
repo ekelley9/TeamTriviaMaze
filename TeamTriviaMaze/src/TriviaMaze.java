@@ -2,6 +2,8 @@ import java.util.Scanner;
 
 public class TriviaMaze {
 	private MazeRoom[][] theMaze;
+	private SQLDatabase database = new SQLDatabase();
+	private TriviaQuestions theQuestions = new TriviaQuestions(database);
 	Scanner input = new Scanner(System.in);
 
 	public TriviaMaze(int row, int column) {
@@ -61,7 +63,7 @@ public class TriviaMaze {
 		return input.nextLine();
 	}
 	
-	//Moves the player around the maze by using the Player object
+	// Moves the player around the maze by using the Player object
 	public void move(Player player, String direction) {
 		int row = player.getPlayerRow();
 		int col = player.getPlayerCol();
@@ -71,20 +73,31 @@ public class TriviaMaze {
 		Boolean validOperand;
 		do {
 			validOperand = true;
-			if(direction.equalsIgnoreCase("w") && curRoom.isDoor('n'))
-				row--;
-			else if(direction.equalsIgnoreCase("a") && curRoom.isDoor('w'))
-				col--;
-			else if(direction.equalsIgnoreCase("s") && curRoom.isDoor('s'))
-				row++;
-			else if(direction.equalsIgnoreCase("d") && curRoom.isDoor('e'))
-				col++;
-			else {
+			if (curRoom.isDoor(direction.charAt(0))) {
+				if (this.theQuestions.menuSelect()) {
+					if (direction.equalsIgnoreCase("w") && curRoom.isDoor('w'))
+						row--;
+					else if (direction.equalsIgnoreCase("a") && curRoom.isDoor('a'))
+						col--;
+					else if (direction.equalsIgnoreCase("s") && curRoom.isDoor('s'))
+						row++;
+					else if (direction.equalsIgnoreCase("d") && curRoom.isDoor('d'))
+						col++;
+					else {
+						System.out.println("Not a valid direction operand: please enter again");
+						direction = moveSelect();
+						validOperand = false;
+					}
+				} else {
+					System.out.println("\nYour answer was inccorect that pathway is now closed\n");
+					this.closePath(direction.charAt(0), player);
+				}
+			} else {
 				System.out.println("Not a valid direction operand: please enter again");
 				direction = moveSelect();
 				validOperand = false;
 			}
-		} while(validOperand == false);
+		} while (validOperand == false);
 
 		player.setPlayerRow(row);
 		player.setPlayerCol(col);
