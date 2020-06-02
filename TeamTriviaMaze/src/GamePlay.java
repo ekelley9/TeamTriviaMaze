@@ -1,8 +1,6 @@
 import java.util.Scanner;
 
 public class GamePlay {
-	
-	public static Scanner reader = new Scanner(System.in);
 
 	public static void main(String[] args) {
 
