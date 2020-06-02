@@ -20,7 +20,6 @@ public class SQLDatabase {
 		}catch(Exception e) {
 			System.out.println(e.getClass().getName() +": "+ e.getMessage());
 		}
-		System.out.println("Table made correctly");
 	}
 	
 	//Constructor sets the connection to the database TriviQuestionsDB.db
@@ -33,7 +32,6 @@ public class SQLDatabase {
 		}catch(Exception e) {
 			System.out.println(e.getClass().getName() +": "+ e.getMessage());
 		}
-		System.out.println("Table made correctly");
 	}
 	
 	//Adds a Multiple choice question to the MultipleChoice table in the current database ADMIN USE ONLY
