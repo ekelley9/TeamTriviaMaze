@@ -16,7 +16,6 @@ public class TriviaMaze {
 		this.addBorders();
 		this.theMaze[0][0].setPlayerLocation(true);
 		if(this.theMaze[this.theMaze.length-1][this.theMaze.length-1] instanceof ExitRoom) {
-			System.out.println("It is");
 		}
 		
 	}
@@ -185,5 +184,91 @@ public class TriviaMaze {
 				this.theMaze[row][column].setSearched(false);
 			}
 		}
+	}
+	
+	public void gamePlayMenu() {
+		int choice = 0;
+		
+		System.out.println(" ___________\n|           |\n| 1. ADMIN  |\n| 2. PLAYER |\n|___________|");
+		
+		do {
+			choice = Integer.parseInt(input.nextLine());
+			
+			if(choice == 1)
+				adminMenu();
+			else if(choice == 2)
+				playerMenu();
+			else
+				System.out.println("INVALID. Pick 1 for ADMIN or 2 for PLAYER");
+		}while(choice < 1 || choice > 2);
+	}
+	
+	public void adminMenu() {
+		String password = "123Password";
+		String attemptedPassword;
+		int choice = 0;
+		
+		System.out.print("Password: ");
+		attemptedPassword = input.nextLine();
+		
+		if(password.equals(attemptedPassword)) {
+			System.out.println("\n______ADDING QUESTIONS_____");
+			System.out.println(" 1. True or False \n 2. Multiple Choice \n 3. Short Answer");
+			
+			do {
+				choice = Integer.parseInt(input.nextLine());
+				if(choice == 1)
+					database.addTrueFalse(input);
+				else if(choice == 2)
+					database.addMultipleChoice(input);
+				else if(choice == 3)
+					database.addShortAnswer(input);
+				else
+					System.out.println("INVALID. Choose 1 for True or False, 2 for Multiple choice or 3 for Short Answer");
+			} while(choice < 1 || choice > 3);
+		}
+	}
+	
+	public void playerMenu() {
+		int choice = 0;
+		
+		System.out.println("\n____________GAME___________");
+		System.out.println(" 1. New Game \n 2. Load a Save \n 3. Cheats");
+		
+		do {
+			choice = Integer.parseInt(input.nextLine());
+			if(choice == 1)
+				System.out.println("Make new game here...");
+			else if(choice == 2)
+				System.out.println("Load a save here....");
+			else if(choice == 3)
+				cheatMenu();
+			else
+				System.out.println("INVLAID. Choose 1 for New Game, 2 for Load a Save or 3 for Cheats");
+		} while(choice < 1 || choice >3);
+		
+	}
+	
+	public boolean cheatMenu() {
+		boolean switches = false; //TODO save my status based on last edit to cheat menu
+		String onOff = "";
+		
+		System.out.print("Navigate Maze Cheat (On/Off): ");
+		
+		do {
+			onOff = input.nextLine();
+			if(onOff.equalsIgnoreCase("on")) {
+				System.out.println("-ON-");
+				switches = true;
+			}
+			else if(onOff.equalsIgnoreCase("off")) {
+				System.out.println("-OFF-");
+				switches = false;
+			}
+			else
+				System.out.println("INVALID. Enter 'on' to turn cheat on or 'off' to turn cheat off");
+		} while(!onOff.equalsIgnoreCase("on") && !onOff.equalsIgnoreCase("off"));
+		
+		return switches;
 	}
 }
