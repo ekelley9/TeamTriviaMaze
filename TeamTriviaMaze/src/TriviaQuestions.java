@@ -84,7 +84,7 @@ public class TriviaQuestions {
 			try {
 				toReturn = Integer.parseInt(this.input.nextLine());
 				isNumber = true;
-				if(toReturn >= maxNum || toReturn < 1) {
+				if(toReturn > maxNum || toReturn < 1) {
 					System.out.println("Not a valid option please pick a number greater than 0 but less than " + maxNum);
 					isNumber = false;
 				}
@@ -97,4 +97,5 @@ public class TriviaQuestions {
 		return toReturn;
 		
 	}
+	
 }

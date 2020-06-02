@@ -120,41 +120,36 @@ public class TriviaMaze {
 		return this.mazeParser(row, column);
 	}
 	
-	//Used to see if a path to the exit room still exists returns true if so
+	// Used to see if a path to the exit room still exists returns true if so
 	public boolean mazeParser(int row, int column) {
 		boolean pathExists = false;
-		if (!this.theMaze[row][column].getSearched()) {
-			this.theMaze[row][column].setSearched(true);
-		}
 		if (this.theMaze[row][column] instanceof ExitRoom) {
-			this.clearSearched();
 			pathExists = true;
-		}else {
-			
-			if (this.theMaze[row][column].isDoor('n') && this.theMaze[row - 1][column].isDoor('s') 
-					&& this.theMaze[row - 1][column].getSearched() == false) {
-				pathExists = mazeParser(row - 1, column);
-			}
-			
-			else if (this.theMaze[row][column].isDoor('e') && this.theMaze[row][column + 1].isDoor('w') 
-					&& this.theMaze[row][column + 1].getSearched() == false) {
+		} else {
+
+			if (this.theMaze[row][column].isDoor('s') && this.theMaze[row + 1][column].getSearched() == false) {
+				this.theMaze[row][column].setSearched(true);
+				pathExists = mazeParser(row + 1, column);
+				
+			} else if (this.theMaze[row][column].isDoor('d') && this.theMaze[row][column + 1].getSearched() == false) {
+				this.theMaze[row][column].setSearched(true);
 				pathExists = mazeParser(row, column + 1);
 			}
-			
-			else if (this.theMaze[row][column].isDoor('s') && this.theMaze[row + 1][column].isDoor('n') 
-					&& this.theMaze[row + 1][column].getSearched() == false) {
-				pathExists = mazeParser(row + 1, column);
+
+			else if (this.theMaze[row][column].isDoor('w') && this.theMaze[row - 1][column].getSearched() == false) {
+				this.theMaze[row][column].setSearched(true);
+				pathExists = mazeParser(row - 1, column);
 			}
-			
-			else if (this.theMaze[row][column].isDoor('w') && this.theMaze[row][column - 1].isDoor('e')
-					&& this.theMaze[row][column - 1].getSearched() == false) {
+
+			else if (this.theMaze[row][column].isDoor('a') && this.theMaze[row][column - 1].getSearched() == false) {
+				this.theMaze[row][column].setSearched(true);
 				pathExists = mazeParser(row, column - 1);
 			}
 		}
-		
+
 		return pathExists;
 	}
-	
+
 	//used to close a path when the player gets a question wrong
 	public void closePath(char direction, Player curPlayer) {
 		int curRow = curPlayer.getPlayerRow();
@@ -179,8 +174,8 @@ public class TriviaMaze {
 
 	//clears the searched fields for each room in the maze setting them to false
 	public void clearSearched() {
-		for(int row = 0; row < this.theMaze.length-1; row++) {
-			for(int column = 0; column < this.theMaze[row].length-1; column++) {
+		for(int row = 0; row < this.theMaze.length; row++) {
+			for(int column = 0; column < this.theMaze[row].length; column++) {
 				this.theMaze[row][column].setSearched(false);
 			}
 		}

@@ -10,13 +10,18 @@ public class GamePlay {
 		
 		testMaze.gamePlayMenu();
 		testMaze.printGameRules();
+		
 
 		while (player.getPlayerRow() != 3 || player.getPlayerCol() != 3) {
-			if(!testMaze.mazeParserHelper(player)) {
+			System.out.println(player.getPlayerRow());
+			System.out.println(player.getPlayerCol());
+			if(testMaze.mazeParserHelper(player) == false) {
 				System.out.println("Looks like you don't know as much about Pokemon as you thought"
 						+ "\nthere is no longer a path to the exit you lose!");
+				testMaze.printMaze();
 				System.exit(0);
 			}
+			testMaze.clearSearched();
 			testMaze.printMaze();
 			direction = testMaze.moveSelect();
 			testMaze.move(player, direction);
