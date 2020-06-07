@@ -1,6 +1,9 @@
+import java.io.Serializable;
 
-public class MazeRoom {
+public class MazeRoom implements Serializable{
+	
 	//boolean fields for each door in a room true means there is a door in that direction
+	private static final long serialVersionUID = 8786708419275454576L;
 	private boolean north = true;
 	private boolean east = true;
 	private boolean south = true;

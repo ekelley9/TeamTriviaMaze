@@ -38,7 +38,7 @@ public class TriviaQuestions {
 		System.out.println("1. True");
 		System.out.println("2. False");
 
-		int playerAnswer = this.numberValidator(2);
+		int playerAnswer = NumberValidator.numberValidator(this.input);
 		if (playerAnswer == 1)
 			isCorrect = answer.equals("True");
 		else if (playerAnswer == 2)
@@ -59,7 +59,7 @@ public class TriviaQuestions {
 		System.out.println("1. " + multipleChoice.get(0));
 		System.out.println("2. " + multipleChoice.get(1));
 		System.out.println("3. " + multipleChoice.get(2));
-		int playerAnswer = this.numberValidator(3);
+		int playerAnswer = NumberValidator.numberValidator(this.input);
 		return answer.equals(multipleChoice.get(playerAnswer-1));
 	}
 	
@@ -75,27 +75,6 @@ public class TriviaQuestions {
 		return answer.equalsIgnoreCase(playerAnswer);
 	}
 	
-	//ensures the input from the user is a number and will not throw an errors
-	public int numberValidator(int maxNum) {
-		boolean isNumber = false;
-		int toReturn = 0;
-		
-		do {
-			try {
-				toReturn = Integer.parseInt(this.input.nextLine());
-				isNumber = true;
-				if(toReturn > maxNum || toReturn < 1) {
-					System.out.println("Not a valid option please pick a number greater than 0 but less than " + maxNum);
-					isNumber = false;
-				}
-			}catch(NumberFormatException e) {
-				System.out.println("\nSomething went wrong please enter your choice again\n");
-			}
-			
-		}while(!isNumber);
-		
-		return toReturn;
-		
-	}
+	
 	
 }
