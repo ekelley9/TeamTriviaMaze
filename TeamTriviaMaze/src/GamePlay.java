@@ -13,8 +13,6 @@ public class GamePlay {
 		
 
 		while (player.getPlayerRow() != 3 || player.getPlayerCol() != 3) {
-			System.out.println(player.getPlayerRow());
-			System.out.println(player.getPlayerCol());
 			if(testMaze.mazeParserHelper(player) == false) {
 				System.out.println("Looks like you don't know as much about Pokemon as you thought"
 						+ "\nthere is no longer a path to the exit you lose!");

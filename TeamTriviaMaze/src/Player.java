@@ -1,5 +1,10 @@
+import java.io.Serializable;
 
-public class Player {
+public class Player implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 11160681266846986L;
 	private int playerRow;
 	private int playerCol;
 	

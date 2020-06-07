@@ -1,6 +1,11 @@
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class TriviaMaze {
+public class TriviaMaze implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4216581100195928697L;
 	private MazeRoom[][] theMaze;
 	private SQLDatabase database = new SQLDatabase();
 	private TriviaQuestions theQuestions = new TriviaQuestions(database);
@@ -15,8 +20,31 @@ public class TriviaMaze {
 		}
 		this.addBorders();
 		this.theMaze[0][0].setPlayerLocation(true);
-		if(this.theMaze[this.theMaze.length-1][this.theMaze.length-1] instanceof ExitRoom) {
+		
+	}
+	
+	//Constructor used for testing 
+	public TriviaMaze(int row, int column, Player player) {
+		this.theMaze = new MazeRoom[row][column];
+		for (int x = 0; x < theMaze.length; x++) {
+			for (int y = 0; y < theMaze[x].length; y++) {
+				theMaze[x][y] = new MazeRoom(true, true, true, true);
+			}
 		}
+		this.addBorders();
+		player.setPlayerRow(3);
+		player.setPlayerCol(2);
+		this.closePath('d', 0, 0);
+		this.closePath('s', 0, 2);
+		this.closePath('d', 1, 1);
+		this.closePath('s', 1, 1);
+		this.closePath('s', 1, 2);
+		this.closePath('d', 2, 2);
+		this.closePath('s', 2, 2);
+		this.closePath('d', 3, 2);
+		this.theMaze[3][2].setPlayerLocation(true);
+		this.printMaze();
+		
 		
 	}
 
@@ -127,21 +155,26 @@ public class TriviaMaze {
 			pathExists = true;
 		} else {
 
-			if (this.theMaze[row][column].isDoor('s') && this.theMaze[row + 1][column].getSearched() == false) {
+			if (this.theMaze[row][column].isDoor('s') && this.theMaze[row + 1][column].getSearched() == false
+					&& !pathExists) {
 				this.theMaze[row][column].setSearched(true);
 				pathExists = mazeParser(row + 1, column);
 				
-			} else if (this.theMaze[row][column].isDoor('d') && this.theMaze[row][column + 1].getSearched() == false) {
+			} if (this.theMaze[row][column].isDoor('d') && this.theMaze[row][column + 1].getSearched() == false 
+					&& !pathExists) {
 				this.theMaze[row][column].setSearched(true);
 				pathExists = mazeParser(row, column + 1);
 			}
 
-			else if (this.theMaze[row][column].isDoor('w') && this.theMaze[row - 1][column].getSearched() == false) {
+			 if (this.theMaze[row][column].isDoor('w') && this.theMaze[row - 1][column].getSearched() == false
+					 && !pathExists) {
 				this.theMaze[row][column].setSearched(true);
 				pathExists = mazeParser(row - 1, column);
+				
 			}
 
-			else if (this.theMaze[row][column].isDoor('a') && this.theMaze[row][column - 1].getSearched() == false) {
+			 if (this.theMaze[row][column].isDoor('a') && this.theMaze[row][column - 1].getSearched() == false
+					 && !pathExists) {
 				this.theMaze[row][column].setSearched(true);
 				pathExists = mazeParser(row, column - 1);
 			}
@@ -154,6 +187,26 @@ public class TriviaMaze {
 	public void closePath(char direction, Player curPlayer) {
 		int curRow = curPlayer.getPlayerRow();
 		int curColumn = curPlayer.getPlayerCol();
+		if(direction == 'w') {
+			this.theMaze[curRow][curColumn].closeDoor('n');
+			this.theMaze[curRow - 1][curColumn].closeDoor('s');
+		}
+		else if(direction == 's') {
+			this.theMaze[curRow][curColumn].closeDoor('s');
+			this.theMaze[curRow + 1][curColumn].closeDoor('n');
+		}
+		else if(direction == 'd') {
+			this.theMaze[curRow][curColumn].closeDoor('e');
+			this.theMaze[curRow][curColumn + 1].closeDoor('w');
+		}
+		else if(direction == 'a') {
+			this.theMaze[curRow][curColumn].closeDoor('w');
+			this.theMaze[curRow][curColumn - 1].closeDoor('e');
+		}
+	}
+	
+	//used to close paths at specific coordinates used for testing
+	public void closePath(char direction, int curRow, int curColumn) {
 		if(direction == 'w') {
 			this.theMaze[curRow][curColumn].closeDoor('n');
 			this.theMaze[curRow - 1][curColumn].closeDoor('s');
@@ -187,7 +240,7 @@ public class TriviaMaze {
 		System.out.println(" ___________\n|           |\n| 1. ADMIN  |\n| 2. PLAYER |\n|___________|");
 		
 		do {
-			choice = Integer.parseInt(input.nextLine());
+			choice = theQuestions.numberValidator(2);
 			
 			if(choice == 1)
 				adminMenu();
@@ -211,7 +264,7 @@ public class TriviaMaze {
 			System.out.println(" 1. True or False \n 2. Multiple Choice \n 3. Short Answer");
 			
 			do {
-				choice = Integer.parseInt(input.nextLine());
+				choice = theQuestions.numberValidator(3);
 				if(choice == 1)
 					database.addTrueFalse(input);
 				else if(choice == 2)
@@ -231,7 +284,7 @@ public class TriviaMaze {
 		System.out.println(" 1. New Game \n 2. Load a Save \n 3. Cheats");
 		
 		do {
-			choice = Integer.parseInt(input.nextLine());
+			choice = theQuestions.numberValidator(3);;
 			if(choice == 1)
 				System.out.println("Make new game here...");
 			else if(choice == 2)
@@ -261,7 +314,7 @@ public class TriviaMaze {
 				switches = false;
 			}
 			else
-				System.out.println("INVALID. Enter 'on' to turn cheat on or 'off' to turn cheat off");
+				System.out.println("INVALID. Enter 'on' to turn cheats on or 'off' to turn cheats off");
 		} while(!onOff.equalsIgnoreCase("on") && !onOff.equalsIgnoreCase("off"));
 		
 		return switches;
