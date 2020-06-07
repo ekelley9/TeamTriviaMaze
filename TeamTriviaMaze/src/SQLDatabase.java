@@ -5,6 +5,7 @@ import java.io.*;
 public class SQLDatabase {
 	
 	//Fields for the SQLDatabase object setting up a Connection, Statement, and ResultSet object to properly use SQL commands
+//	private static final long serialVersionUID = 1048349390174540667L;
 	private Connection curConection = null;
 	private Statement curStatement = null;
 	private ResultSet queryResult = null;
@@ -19,6 +20,7 @@ public class SQLDatabase {
 			this.createTables();
 		}catch(Exception e) {
 			System.out.println(e.getClass().getName() +": "+ e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -31,6 +33,7 @@ public class SQLDatabase {
 			this.createTables();
 		}catch(Exception e) {
 			System.out.println(e.getClass().getName() +": "+ e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -68,10 +71,13 @@ public class SQLDatabase {
 				+ "Values(" + "\"" +question + "\", " +"\"" + wrongAnswer1+"\", " + "\""+ wrongAnswer2 + "\", " + "\"" + correctAnswer+"\");";
 			
 		try {
+			this.openConnection();
 			this.curStatement.executeUpdate(toInsert);
 			System.out.println("New tuple successfully inserted!");
+			this.closeConnection();
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -101,11 +107,14 @@ public class SQLDatabase {
 		
 		
 		try {
+			this.openConnection();
 			this.curStatement.executeUpdate(toInsert);
 			System.out.println("New tuple successfully inserted!");
+			this.closeConnection();
 			
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -135,11 +144,14 @@ public class SQLDatabase {
 		
 		
 		try {
+			this.openConnection();
 			this.curStatement.executeUpdate(toInsert);
 			System.out.println("New tuple successfully inserted!");
+			this.closeConnection();
 			
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -159,6 +171,7 @@ public class SQLDatabase {
 		
 		
 		try {
+			this.openConnection();
 			this.queryResult = this.curStatement.executeQuery("Select max(QUESTION_ID) from MultipleChoice");
 			
 			maxNum = this.queryResult.getInt(1);
@@ -173,8 +186,10 @@ public class SQLDatabase {
 				wrongAnswer2 = this.queryResult.getString("WRONG_ANSWER2");
 				correctAnswer = this.queryResult.getString("CORRECT_ANSWER");
 			}
+			this.closeConnection();
 		}catch(SQLException e) {
 			System.out.println(e.getClass().getName() + " " + e.getMessage());
+			e.printStackTrace();
 		}
 		
 		questionArray.add(question);
@@ -197,6 +212,7 @@ public class SQLDatabase {
 				+ "where QUESTION_ID = ";
 		
 		try {
+			this.openConnection();
 			this.queryResult = this.curStatement.executeQuery("Select max(QUESTION_ID) from TrueFalse");
 		
 			queryToReturn = this.rand.nextInt(queryResult.getInt(1))+1;
@@ -207,8 +223,10 @@ public class SQLDatabase {
 				question = this.queryResult.getString("QUESTION");
 				correctAnswer = this.queryResult.getString("CORRECT_ANSWER");
 			}
+			this.closeConnection();
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		questionArray.add(question);
@@ -230,6 +248,7 @@ public class SQLDatabase {
 				+ "where QUESTION_ID = ";
 		
 		try {
+			this.openConnection();
 			this.queryResult = this.curStatement.executeQuery("Select max(QUESTION_ID) from TrueFalse");
 		
 			queryToReturn = this.rand.nextInt(queryResult.getInt(1))+1;
@@ -240,8 +259,10 @@ public class SQLDatabase {
 				question = this.queryResult.getString("QUESTION");
 				correctAnswer = this.queryResult.getString("CORRECT_ANSWER");
 			}
+			this.closeConnection();
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		questionArray.add(question);
@@ -251,20 +272,10 @@ public class SQLDatabase {
 	
 	}
 	
-	//Closes the Connection and Statement Objects use only when the game is over
-	public void closeDB() {
-		try {
-			this.curStatement.close();
-			this.curConection.close();
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
 	//Creates the required tables in the current database if they currently do not exist
 	public void createTables() {
 		try {
-			
+			this.openConnection();
 			String multipleChoiceTable = "Create Table if not exists MultipleChoice "
 					+ "(QUESTION_ID integer primary key autoincrement,"
 					+ "QUESTION text not null,"
@@ -285,8 +296,10 @@ public class SQLDatabase {
 			curStatement.executeUpdate(multipleChoiceTable);
 			curStatement.executeUpdate(trueFalse);
 			curStatement.executeUpdate(shortAnswer);
+			this.closeConnection();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		System.out.println();
@@ -296,6 +309,7 @@ public class SQLDatabase {
 	// For testing purposes only
 	public void testTables() {
 		try {
+			this.openConnection();
 			this.queryResult = curStatement.executeQuery("Select * from MultipleChoice;");
 
 			System.out.println("\nQUESTION_ID\t QUESTION\t WRONG_ANSWER1\t WRONG_ANSWER2\t CORRECT_ANSWER");
@@ -327,9 +341,12 @@ public class SQLDatabase {
 				String answer = this.queryResult.getString("CORRECT_ANSWER");
 				System.out.println(id + "\t " + question + "\t" + answer);
 			}
+			
+			this.closeConnection();
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -358,7 +375,9 @@ public class SQLDatabase {
 						+ "\", " + "\"" + correctAnswer + "\");";
 
 				try {
+					this.openConnection();
 					this.curStatement.executeUpdate(toInsert);
+					this.closeConnection();
 					System.out.println("New tuple successfully inserted!");
 				} catch (SQLException e) {
 					System.out.println(e.getMessage());
@@ -372,7 +391,40 @@ public class SQLDatabase {
 	}
 	
 	// Reads questions from a file and adds them to the TrueFalse table
-		public void addTrueFalseFile(String fileName) {
+	public void addTrueFalseFile(String fileName) {
+		String question = "";
+		String correctAnswer = "";
+		String toInsert = "";
+		File file = new File(fileName);
+		try {
+			Scanner fin = new Scanner(file);
+			while (fin.hasNextLine()) {
+
+				question = fin.nextLine();
+
+				correctAnswer = fin.nextLine();
+
+				toInsert = "Insert into TrueFalse (QUESTION, CORRECT_ANSWER)" + "Values(" + "\"" + question + "\", "
+						+ "\"" + correctAnswer + "\");";
+
+				try {
+					this.openConnection();
+					this.curStatement.executeUpdate(toInsert);
+					this.closeConnection();
+					System.out.println("New tuple successfully inserted!");
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+			fin.close();
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+	}
+		
+		// Reads questions from a file and adds them to the ShortAnswer table
+		public void addShortAnswerFile(String fileName) {
 			String question = "";
 			String correctAnswer = "";
 			String toInsert = "";
@@ -385,11 +437,13 @@ public class SQLDatabase {
 
 					correctAnswer = fin.nextLine();
 
-					toInsert = "Insert into TrueFalse (QUESTION, CORRECT_ANSWER)"
-							+ "Values(" + "\"" + question + "\", " + "\"" + correctAnswer + "\");";
+					toInsert = "Insert into ShortAnswer (QUESTION, CORRECT_ANSWER)" + "Values(" + "\"" + question
+							+ "\", " + "\"" + correctAnswer + "\");";
 
 					try {
+						this.openConnection();
 						this.curStatement.executeUpdate(toInsert);
+						this.closeConnection();
 						System.out.println("New tuple successfully inserted!");
 					} catch (SQLException e) {
 						System.out.println(e.getMessage());
@@ -402,36 +456,25 @@ public class SQLDatabase {
 
 		}
 		
-		// Reads questions from a file and adds them to the ShortAnswer table
-				public void addShortAnswerFile(String fileName) {
-					String question = "";
-					String correctAnswer = "";
-					String toInsert = "";
-					File file = new File(fileName);
-					try {
-						Scanner fin = new Scanner(file);
-						while (fin.hasNextLine()) {
-
-							question = fin.nextLine();
-
-							correctAnswer = fin.nextLine();
-
-							toInsert = "Insert into ShortAnswer (QUESTION, CORRECT_ANSWER)"
-									+ "Values(" + "\"" + question + "\", " + "\"" + correctAnswer + "\");";
-
-							try {
-								this.curStatement.executeUpdate(toInsert);
-								System.out.println("New tuple successfully inserted!");
-							} catch (SQLException e) {
-								System.out.println(e.getMessage());
-							}
-						}
-						fin.close();
-					} catch (FileNotFoundException e1) {
-						e1.printStackTrace();
-					}
-
-				}
-	
+		public void closeConnection() {
+//			try {
+//				this.curConection.close();
+//				this.curStatement.close();
+//				this.queryResult.close();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+		}
+		
+		public void openConnection(){
+			try {
+				Class.forName("org.sqlite.JDBC");
+				this.curConection = DriverManager.getConnection("jdbc:sqlite:TrivaQuestionsDB.db");
+				this.curStatement = this.curConection.createStatement();
+			}catch(Exception e) {
+				System.out.println(e.getClass().getName() +": "+ e.getMessage());
+				e.printStackTrace();
+			}
+		}
 	
 }

@@ -2,14 +2,9 @@ import java.io.Serializable;
 import java.util.Scanner;
 
 public class TriviaMaze implements Serializable {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 4216581100195928697L;
 	private MazeRoom[][] theMaze;
-	private SQLDatabase database = new SQLDatabase();
-	private TriviaQuestions theQuestions = new TriviaQuestions(database);
-	Scanner input = new Scanner(System.in);
 
 	public TriviaMaze(int row, int column) {
 		this.theMaze = new MazeRoom[row][column];
@@ -85,52 +80,48 @@ public class TriviaMaze implements Serializable {
 		}
 	}
 	
-	public String moveSelect() {
-		System.out.print("Move (WASD): ");
-		return input.nextLine();
-	}
-	
 	// Moves the player around the maze by using the Player object
 	public void move(Player player, String direction) {
 		int row = player.getPlayerRow();
 		int col = player.getPlayerCol();
+		boolean validMove = false;
 		MazeRoom curRoom = this.theMaze[row][col];
-		this.theMaze[row][col].setPlayerLocation(false);
 
-		Boolean validOperand;
-		do {
-			validOperand = true;
-			if (curRoom.isDoor(direction.charAt(0))) {
-				if (this.theQuestions.menuSelect()) {
-					if (direction.equalsIgnoreCase("w") && curRoom.isDoor('w'))
-						row--;
-					else if (direction.equalsIgnoreCase("a") && curRoom.isDoor('a'))
-						col--;
-					else if (direction.equalsIgnoreCase("s") && curRoom.isDoor('s'))
-						row++;
-					else if (direction.equalsIgnoreCase("d") && curRoom.isDoor('d'))
-						col++;
-					else {
-						System.out.println("Not a valid direction operand: please enter again");
-						direction = moveSelect();
-						validOperand = false;
-					}
-				} else {
-					System.out.println("\nYour answer was inccorect that pathway is now closed\n");
-					this.closePath(direction.charAt(0), player);
-				}
-			} else {
-				System.out.println("Not a valid direction operand: please enter again");
-				direction = moveSelect();
-				validOperand = false;
+		if (curRoom.isDoor(direction.charAt(0))) {
+			if (direction.equalsIgnoreCase("w")) {
+				row--;
+				validMove = true;
+			} else if (direction.equalsIgnoreCase("a")) {
+				col--;
+				validMove = true;
+			} else if (direction.equalsIgnoreCase("s")) {
+				row++;
+				validMove = true;
+			} else if (direction.equalsIgnoreCase("d")) {
+				col++;
+				validMove = true;
 			}
-		} while (validOperand == false);
 
-		player.setPlayerRow(row);
-		player.setPlayerCol(col);
-		this.theMaze[row][col].setPlayerLocation(true);
+		} else {
+			System.out.println("That pathway is closed you cannot move that direction\n");
+
+		}
+
+		if (validMove) {
+			curRoom.setPlayerLocation(false);
+			player.setPlayerRow(row);
+			player.setPlayerCol(col);
+			this.theMaze[row][col].setPlayerLocation(true);
+		}
+
 	}
 	
+	//
+	public boolean curRoomIsDoor(Player player, String direction) {
+		MazeRoom curRoom = theMaze[player.getPlayerRow()][player.getPlayerCol()];
+		return curRoom.isDoor(direction.charAt(0));
+	}
+
 	//Prints the rules to the Trivia maze
 	public void printGameRules() {
 		System.out.println("\n --------------------------------------------------------------------------------------------");
@@ -234,89 +225,5 @@ public class TriviaMaze implements Serializable {
 		}
 	}
 	
-	public void gamePlayMenu() {
-		int choice = 0;
-		
-		System.out.println(" ___________\n|           |\n| 1. ADMIN  |\n| 2. PLAYER |\n|___________|");
-		
-		do {
-			choice = theQuestions.numberValidator(2);
-			
-			if(choice == 1)
-				adminMenu();
-			else if(choice == 2)
-				playerMenu();
-			else
-				System.out.println("INVALID. Pick 1 for ADMIN or 2 for PLAYER");
-		}while(choice < 1 || choice > 2);
-	}
 	
-	public void adminMenu() {
-		String password = "123Password";
-		String attemptedPassword;
-		int choice = 0;
-		
-		System.out.print("Password: ");
-		attemptedPassword = input.nextLine();
-		
-		if(password.equals(attemptedPassword)) {
-			System.out.println("\n______ADDING QUESTIONS_____");
-			System.out.println(" 1. True or False \n 2. Multiple Choice \n 3. Short Answer");
-			
-			do {
-				choice = theQuestions.numberValidator(3);
-				if(choice == 1)
-					database.addTrueFalse(input);
-				else if(choice == 2)
-					database.addMultipleChoice(input);
-				else if(choice == 3)
-					database.addShortAnswer(input);
-				else
-					System.out.println("INVALID. Choose 1 for True or False, 2 for Multiple choice or 3 for Short Answer");
-			} while(choice < 1 || choice > 3);
-		}
-	}
-	
-	public void playerMenu() {
-		int choice = 0;
-		
-		System.out.println("\n____________GAME___________");
-		System.out.println(" 1. New Game \n 2. Load a Save \n 3. Cheats");
-		
-		do {
-			choice = theQuestions.numberValidator(3);;
-			if(choice == 1)
-				System.out.println("Make new game here...");
-			else if(choice == 2)
-				System.out.println("Load a save here....");
-			else if(choice == 3)
-				cheatMenu();
-			else
-				System.out.println("INVLAID. Choose 1 for New Game, 2 for Load a Save or 3 for Cheats");
-		} while(choice < 1 || choice >3);
-		
-	}
-	
-	public boolean cheatMenu() {
-		boolean switches = false; //TODO save my status based on last edit to cheat menu
-		String onOff = "";
-		
-		System.out.print("Navigate Maze Cheat (On/Off): ");
-		
-		do {
-			onOff = input.nextLine();
-			if(onOff.equalsIgnoreCase("on")) {
-				System.out.println("-ON-");
-				switches = true;
-			}
-			else if(onOff.equalsIgnoreCase("off")) {
-				System.out.println("-OFF-");
-				switches = false;
-			}
-			else
-				System.out.println("INVALID. Enter 'on' to turn cheats on or 'off' to turn cheats off");
-		} while(!onOff.equalsIgnoreCase("on") && !onOff.equalsIgnoreCase("off"));
-		
-		return switches;
-	}
 }
