@@ -2,14 +2,19 @@ import java.util.Scanner;
 import java.io.*;
 
 public class GamePlay {
-
+	
+	private static SQLDatabase database = new SQLDatabase();
+	private static TriviaQuestions theQuestions = new TriviaQuestions(database);
+	private static TriviaMaze theMaze = new TriviaMaze(4,4);
+	
 	public static void main(String[] args) throws Exception {
 
-		TriviaMaze testMaze = new TriviaMaze(4,4);
 		Scanner input = new Scanner(System.in);
 		
 		
-		gamePlayMenu(testMaze, input);
+		do{
+			gamePlayMenu(theMaze, input);
+		}while(playAgain(input));
 		
 		
 
@@ -24,11 +29,14 @@ public class GamePlay {
 				System.out.println("Looks like you don't know as much about Pokemon as you thought"
 						+ "\nthere is no longer a path to the exit you lose!");
 				theMaze.printMaze();
-				System.exit(0);
+				return;
 			}
 			theMaze.clearSearched();
 			theMaze.printMaze();
+			
 			playerOptionsSelect(theMaze, theQuestions, player, input);
+			
+			
 			
 		}
 
@@ -38,8 +46,6 @@ public class GamePlay {
 	
 	public static void playerMenu(TriviaMaze theMaze, Scanner input) throws Exception {
 		int choice = 0;
-		SQLDatabase database = null;
-		TriviaQuestions theQuestions = null;
 
 		System.out.println("\n____________GAME___________");
 		System.out.println(" 1. New Game \n 2. Load a Save \n 3. Cheats");
@@ -49,20 +55,22 @@ public class GamePlay {
 			;
 			if (choice == 1) {
 				theMaze = new TriviaMaze(4, 4);
-				database = new SQLDatabase();
-				theQuestions = new TriviaQuestions(database);
 				mainGame(theMaze, theQuestions, new Player(), input);
 			} else if (choice == 2) {
-				database = new SQLDatabase();
-				theQuestions = new TriviaQuestions(database);
 				loadGame(theMaze, theQuestions, new Player(), input);
 			}
 			else if (choice == 3)
-				cheatMenu(theMaze, input);
+				cheatMenu(theMaze, theQuestions, new Player(),input);
 			else
 				System.out.println("INVLAID. Choose 1 for New Game, 2 for Load a Save or 3 for Cheats");
 		} while (choice < 1 || choice > 3);
 
+	}
+	
+	public static boolean sameQuestion(TriviaQuestions theQuestions) {
+		
+		 boolean toReturn = theQuestions.printTrueOrFalseCheatMenu();
+		 return toReturn;
 	}
 	
 	public static void gamePlayMenu(TriviaMaze theMaze, Scanner input) throws Exception {
@@ -104,7 +112,11 @@ public class GamePlay {
 			} else if (playerChoice.equalsIgnoreCase("W") || playerChoice.equalsIgnoreCase("A")
 					|| playerChoice.equalsIgnoreCase("S") || playerChoice.equalsIgnoreCase("D")) {
 				if (theMaze.curRoomIsDoor(player, playerChoice)) {
-					if (theQuestions.menuSelect()) {
+					if (theMaze.getSameQuestion() && sameQuestion(theQuestions)) {
+						theMaze.move(player, playerChoice);
+					} else if (theMaze.getQuestionsDisabled()) {
+						theMaze.move(player, playerChoice);
+					} else if (theQuestions.menuSelect()) {
 						theMaze.move(player, playerChoice);
 					} else {
 						System.out.println("Incorrect that pathway is now closed\n");
@@ -150,27 +162,58 @@ public class GamePlay {
 		}
 	}
 	
-	public static boolean cheatMenu(TriviaMaze theMaze, Scanner input) {
-		boolean switches = false; //TODO save my status based on last edit to cheat menu
+	public static void cheatMenu(TriviaMaze theMaze, TriviaQuestions theQuestions, Player player, Scanner input) {
+		boolean switches = false; // TODO save my status based on last edit to cheat menu
 		String onOff = "";
-		
-		System.out.print("Navigate Maze Cheat (On/Off): ");
-		
+
+		System.out.println("Cheat Menu\nDisable Questions(1)\n" + "Ask only one Question(2)");
+
 		do {
 			onOff = input.nextLine();
-			if(onOff.equalsIgnoreCase("on")) {
-				System.out.println("-ON-");
-				switches = true;
-			}
-			else if(onOff.equalsIgnoreCase("off")) {
-				System.out.println("-OFF-");
-				switches = false;
-			}
-			else
-				System.out.println("INVALID. Enter 'on' to turn cheats on or 'off' to turn cheats off");
-		} while(!onOff.equalsIgnoreCase("on") && !onOff.equalsIgnoreCase("off"));
+			if (onOff.equalsIgnoreCase("1")) {
+				switches = theMaze.getQuestionsDisabled();
+				theMaze.setQuestionsDisabled(!switches);
+				if (theMaze.getQuestionsDisabled()) {
+					System.out.println("Questions have been Disabled");
+				} else if (!theMaze.getQuestionsDisabled()) {
+					System.out.println("Questions have been Enabled");
+				}
+			} else if (onOff.equalsIgnoreCase("2")) {
+				switches = theMaze.getSameQuestion();
+				theMaze.setSameQuestion(!switches);
+				if (theMaze.getSameQuestion()) {
+					System.out.println("You will now only be asked a single question");
+				} else if (!theMaze.getSameQuestion()) {
+					System.out.println("You will now be asked random questions");
+				}
+			} else
+				System.out.println("INVALID. Enter '1' to disable questions or '2' enable a single question");
+		} while (!onOff.equalsIgnoreCase("1") && !onOff.equalsIgnoreCase("2"));
 		
-		return switches;
+		System.out.println();
+
+		mainGame(theMaze, theQuestions, player, input);
+
+	}
+	
+	public static boolean playAgain(Scanner input) {
+		int choice = 0;
+		while(true){
+			System.out.print("Would you like to play again\n"
+					+ "Yes (1)\n"
+					+ "No (2)");
+			choice = NumberValidator.numberValidator(input);
+			switch(choice) {
+			case 1:
+				return true;
+			case 2:
+				return false;
+			default:
+				System.out.println("Please enter a valid selection");
+			
+			}
+			
+		}
 	}
 	
 	public static void saveGame(TriviaMaze theMaze, Player player, Scanner input) {

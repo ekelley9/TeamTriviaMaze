@@ -5,6 +5,8 @@ public class TriviaMaze implements Serializable {
 	
 	private static final long serialVersionUID = 4216581100195928697L;
 	private MazeRoom[][] theMaze;
+	private boolean questionsDisable = false;
+	private boolean sameQuestion = false;
 
 	public TriviaMaze(int row, int column) {
 		this.theMaze = new MazeRoom[row][column];
@@ -225,5 +227,20 @@ public class TriviaMaze implements Serializable {
 		}
 	}
 	
+	public void setQuestionsDisabled(boolean toSet) {
+		this.questionsDisable = toSet;
+	}
+	
+	public boolean getQuestionsDisabled() {
+		return this.questionsDisable;
+	}
+	
+	public void setSameQuestion(boolean toSet) {
+		this.sameQuestion = toSet;
+	}
+	
+	public boolean getSameQuestion() {
+		return this.sameQuestion;
+	}
 	
 }
