@@ -5,9 +5,9 @@ import java.util.Random;
 
 public class TriviaQuestions {
 	
-	Scanner input = new Scanner(System.in);
-	Random chance = new Random();
-	SQLDatabase database;
+	private Scanner input = new Scanner(System.in);
+	private Random chance = new Random();
+	private SQLDatabase database;
 	
 	public TriviaQuestions(SQLDatabase database) {
 		this.database = database;
