@@ -71,10 +71,8 @@ public class SQLDatabase {
 				+ "Values(" + "\"" +question + "\", " +"\"" + wrongAnswer1+"\", " + "\""+ wrongAnswer2 + "\", " + "\"" + correctAnswer+"\");";
 			
 		try {
-			this.openConnection();
 			this.curStatement.executeUpdate(toInsert);
 			System.out.println("New tuple successfully inserted!");
-			this.closeConnection();
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -107,10 +105,8 @@ public class SQLDatabase {
 		
 		
 		try {
-			this.openConnection();
 			this.curStatement.executeUpdate(toInsert);
 			System.out.println("New tuple successfully inserted!");
-			this.closeConnection();
 			
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());
@@ -144,10 +140,8 @@ public class SQLDatabase {
 		
 		
 		try {
-			this.openConnection();
 			this.curStatement.executeUpdate(toInsert);
 			System.out.println("New tuple successfully inserted!");
-			this.closeConnection();
 			
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());
@@ -171,7 +165,6 @@ public class SQLDatabase {
 		
 		
 		try {
-			this.openConnection();
 			this.queryResult = this.curStatement.executeQuery("Select max(QUESTION_ID) from MultipleChoice");
 			
 			maxNum = this.queryResult.getInt(1);
@@ -186,7 +179,6 @@ public class SQLDatabase {
 				wrongAnswer2 = this.queryResult.getString("WRONG_ANSWER2");
 				correctAnswer = this.queryResult.getString("CORRECT_ANSWER");
 			}
-			this.closeConnection();
 		}catch(SQLException e) {
 			System.out.println(e.getClass().getName() + " " + e.getMessage());
 			e.printStackTrace();
@@ -212,7 +204,6 @@ public class SQLDatabase {
 				+ "where QUESTION_ID = ";
 		
 		try {
-			this.openConnection();
 			this.queryResult = this.curStatement.executeQuery("Select max(QUESTION_ID) from TrueFalse");
 		
 			queryToReturn = this.rand.nextInt(queryResult.getInt(1))+1;
@@ -223,7 +214,34 @@ public class SQLDatabase {
 				question = this.queryResult.getString("QUESTION");
 				correctAnswer = this.queryResult.getString("CORRECT_ANSWER");
 			}
-			this.closeConnection();
+		}catch(SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		
+		questionArray.add(question);
+		questionArray.add(correctAnswer);
+		
+		return questionArray;
+	
+	}
+	
+	public ArrayList<String> getTrueFalseCheat() {
+		ArrayList<String> questionArray = new ArrayList<String>();
+		String question = "";
+		String correctAnswer = "";
+		String query = "Select QUESTION, CORRECT_ANSWER"
+				+ " from TrueFalse "
+				+ "where QUESTION_ID = 2";
+		
+		try {
+			
+			this.queryResult = this.curStatement.executeQuery(query);
+			
+			while(this.queryResult.next()) {
+				question = this.queryResult.getString("QUESTION");
+				correctAnswer = this.queryResult.getString("CORRECT_ANSWER");
+			}
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -248,7 +266,6 @@ public class SQLDatabase {
 				+ "where QUESTION_ID = ";
 		
 		try {
-			this.openConnection();
 			this.queryResult = this.curStatement.executeQuery("Select max(QUESTION_ID) from TrueFalse");
 		
 			queryToReturn = this.rand.nextInt(queryResult.getInt(1))+1;
@@ -259,7 +276,6 @@ public class SQLDatabase {
 				question = this.queryResult.getString("QUESTION");
 				correctAnswer = this.queryResult.getString("CORRECT_ANSWER");
 			}
-			this.closeConnection();
 		}catch(SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -275,7 +291,6 @@ public class SQLDatabase {
 	//Creates the required tables in the current database if they currently do not exist
 	public void createTables() {
 		try {
-			this.openConnection();
 			String multipleChoiceTable = "Create Table if not exists MultipleChoice "
 					+ "(QUESTION_ID integer primary key autoincrement,"
 					+ "QUESTION text not null,"
@@ -296,7 +311,6 @@ public class SQLDatabase {
 			curStatement.executeUpdate(multipleChoiceTable);
 			curStatement.executeUpdate(trueFalse);
 			curStatement.executeUpdate(shortAnswer);
-			this.closeConnection();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -309,7 +323,6 @@ public class SQLDatabase {
 	// For testing purposes only
 	public void testTables() {
 		try {
-			this.openConnection();
 			this.queryResult = curStatement.executeQuery("Select * from MultipleChoice;");
 
 			System.out.println("\nQUESTION_ID\t QUESTION\t WRONG_ANSWER1\t WRONG_ANSWER2\t CORRECT_ANSWER");
@@ -342,7 +355,6 @@ public class SQLDatabase {
 				System.out.println(id + "\t " + question + "\t" + answer);
 			}
 			
-			this.closeConnection();
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -375,9 +387,7 @@ public class SQLDatabase {
 						+ "\", " + "\"" + correctAnswer + "\");";
 
 				try {
-					this.openConnection();
 					this.curStatement.executeUpdate(toInsert);
-					this.closeConnection();
 					System.out.println("New tuple successfully inserted!");
 				} catch (SQLException e) {
 					System.out.println(e.getMessage());
@@ -408,9 +418,7 @@ public class SQLDatabase {
 						+ "\"" + correctAnswer + "\");";
 
 				try {
-					this.openConnection();
 					this.curStatement.executeUpdate(toInsert);
-					this.closeConnection();
 					System.out.println("New tuple successfully inserted!");
 				} catch (SQLException e) {
 					System.out.println(e.getMessage());
@@ -441,9 +449,7 @@ public class SQLDatabase {
 							+ "\", " + "\"" + correctAnswer + "\");";
 
 					try {
-						this.openConnection();
 						this.curStatement.executeUpdate(toInsert);
-						this.closeConnection();
 						System.out.println("New tuple successfully inserted!");
 					} catch (SQLException e) {
 						System.out.println(e.getMessage());
@@ -454,27 +460,6 @@ public class SQLDatabase {
 				e1.printStackTrace();
 			}
 
-		}
-		
-		public void closeConnection() {
-//			try {
-//				this.curConection.close();
-//				this.curStatement.close();
-//				this.queryResult.close();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-		}
-		
-		public void openConnection(){
-			try {
-				Class.forName("org.sqlite.JDBC");
-				this.curConection = DriverManager.getConnection("jdbc:sqlite:TrivaQuestionsDB.db");
-				this.curStatement = this.curConection.createStatement();
-			}catch(Exception e) {
-				System.out.println(e.getClass().getName() +": "+ e.getMessage());
-				e.printStackTrace();
-			}
 		}
 	
 }

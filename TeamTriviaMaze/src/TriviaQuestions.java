@@ -75,6 +75,26 @@ public class TriviaQuestions {
 		return answer.equalsIgnoreCase(playerAnswer);
 	}
 	
+	public boolean printTrueOrFalseCheatMenu() {
+		ArrayList<String> trueFalse = database.getTrueFalseCheat();
+		String answer = trueFalse.get(trueFalse.size() - 1);
+		String question = trueFalse.get(0);
+		boolean isCorrect = true;
+		
+		System.out.println("True or False");
+		System.out.println(question);
+		System.out.println("1. True");
+		System.out.println("2. False");
+
+		int playerAnswer = NumberValidator.numberValidator(this.input);
+		if (playerAnswer == 1)
+			isCorrect = answer.equals("True");
+		else if (playerAnswer == 2)
+			isCorrect =  answer.equals("False");
+
+		return isCorrect;
+	}
+	
 	
 	
 }
