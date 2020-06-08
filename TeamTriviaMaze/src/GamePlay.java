@@ -70,6 +70,7 @@ public class GamePlay {
 	public static boolean sameQuestion(TriviaQuestions theQuestions) {
 		
 		 boolean toReturn = theQuestions.printTrueOrFalseCheatMenu();
+		 System.out.println(toReturn);
 		 return toReturn;
 	}
 	
@@ -112,8 +113,13 @@ public class GamePlay {
 			} else if (playerChoice.equalsIgnoreCase("W") || playerChoice.equalsIgnoreCase("A")
 					|| playerChoice.equalsIgnoreCase("S") || playerChoice.equalsIgnoreCase("D")) {
 				if (theMaze.curRoomIsDoor(player, playerChoice)) {
-					if (theMaze.getSameQuestion() && sameQuestion(theQuestions)) {
-						theMaze.move(player, playerChoice);
+					if (theMaze.getSameQuestion()) {
+						if (sameQuestion(theQuestions))
+							theMaze.move(player, playerChoice);
+						else {
+							System.out.println("Incorrect that pathway is now closed\n");
+							theMaze.closePath(playerChoice.charAt(0), player);
+						}
 					} else if (theMaze.getQuestionsDisabled()) {
 						theMaze.move(player, playerChoice);
 					} else if (theQuestions.menuSelect()) {
@@ -127,7 +133,8 @@ public class GamePlay {
 				}
 				correctInput = true;
 			} else if (playerChoice.equalsIgnoreCase("exit")) {
-
+				System.exit(0);
+				correctInput = true;
 			} else {
 				System.out.println("Not a valid option please select a valid option\n");
 			}
@@ -135,7 +142,7 @@ public class GamePlay {
 		} while (!correctInput);
 
 	}
-	
+
 	public static void adminMenu(SQLDatabase database, Scanner input) {
 		String password = "123Password";
 		String attemptedPassword;
