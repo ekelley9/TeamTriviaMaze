@@ -12,6 +12,11 @@ public class Player implements Serializable{
 		playerCol = 0;
 	}
 	
+	public Player(int row, int column) {
+		playerRow = row;
+		playerCol = column;
+	}
+	
 	public void setPlayerRow(int row) { this.playerRow = row; }
 	
 	public void setPlayerCol(int col) { this.playerCol = col; }
