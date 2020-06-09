@@ -104,7 +104,7 @@ public class MazeRoom implements Serializable{
 			playerString = "A";
 		
 		
-		if(!this.isPlayerLocation && !this.isAvailable)
+		if(!north && !south && !east && !west)
 			playerString = "X";
 		
 		if(this instanceof ExitRoom)

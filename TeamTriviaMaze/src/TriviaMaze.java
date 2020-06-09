@@ -29,8 +29,6 @@ public class TriviaMaze implements Serializable {
 			}
 		}
 		this.addBorders();
-		player.setPlayerRow(3);
-		player.setPlayerCol(2);
 		this.closePath('d', 0, 0);
 		this.closePath('s', 0, 2);
 		this.closePath('d', 1, 1);
@@ -40,7 +38,6 @@ public class TriviaMaze implements Serializable {
 		this.closePath('s', 2, 2);
 		this.closePath('d', 3, 2);
 		this.theMaze[3][2].setPlayerLocation(true);
-		this.printMaze();
 		
 		
 	}
@@ -243,4 +240,25 @@ public class TriviaMaze implements Serializable {
 		return this.sameQuestion;
 	}
 	
+	@Override
+	public String toString(){
+		String toReturn = "";
+		for (int i = 0; i < this.theMaze.length; i++) {
+			for (int j = 0; j < this.theMaze.length; j++) {
+				toReturn += this.theMaze[i][j].roomTop() + " ";
+			}
+			toReturn += "\n";
+			for (int k = 0; k < this.theMaze.length; k++) {
+				toReturn += this.theMaze[i][k].roomMid() + " ";
+			}
+			toReturn += "\n";
+			for (int l = 0; l < this.theMaze.length; l++) {
+				toReturn += this.theMaze[i][l].roomBottom() + " ";
+			}
+			toReturn += "\n";
+
+		}
+		
+		return toReturn;
+	}
 }
