@@ -10,7 +10,6 @@ public class GamePlay {
 	public static void main(String[] args) throws Exception {
 
 		Scanner input = new Scanner(System.in);
-		System.out.println(theMaze.toString());
 		
 		
 		do{
@@ -102,9 +101,9 @@ public class GamePlay {
 			System.out.print("Move Down(S)\n");
 			System.out.print("Move left(A)\n");
 			System.out.print("Move Right(D)\n");
-			System.out.println("Save game(save)\n");
-			System.out.println("Exit game(exit)\n");
-			System.out.print("Enter your choice:  ");
+			System.out.print("Save game(save)\n");
+			System.out.print("Exit game(exit)\n");
+			System.out.print("Enter your choice: ");
 
 			String playerChoice = input.nextLine();
 
@@ -147,27 +146,39 @@ public class GamePlay {
 	public static void adminMenu(SQLDatabase database, Scanner input) {
 		String password = "123Password";
 		String attemptedPassword;
+		int attempts = 0;
+		boolean correctPassword = false;
 		int choice = 0;
-		
-		System.out.print("Password: ");
-		attemptedPassword = input.nextLine();
-		
-		if(password.equals(attemptedPassword)) {
-			System.out.println("\n______ADDING QUESTIONS_____");
-			System.out.println(" 1. True or False \n 2. Multiple Choice \n 3. Short Answer");
-			
-			do {
-				choice = NumberValidator.numberValidator(input);
-				if(choice == 1)
-					database.addTrueFalse(input);
-				else if(choice == 2)
-					database.addMultipleChoice(input);
-				else if(choice == 3)
-					database.addShortAnswer(input);
-				else
-					System.out.println("INVALID. Choose 1 for True or False, 2 for Multiple choice or 3 for Short Answer");
-			} while(choice < 1 || choice > 3);
-		}
+
+		do {
+			System.out.print("Enter the Password: ");
+			attemptedPassword = input.nextLine();
+			correctPassword = attemptedPassword.equalsIgnoreCase(password);
+			if (!correctPassword) {
+				System.out.println("Incorrect password Please try again\n");
+			}
+			if (attempts == 5) {
+				System.out.println("Too many failed attempts try again later\n");
+				input.nextLine();
+				System.exit(0);
+			}
+			attempts++;
+		} while (!correctPassword);
+
+		System.out.println("\n______ADDING QUESTIONS_____");
+		System.out.println(" 1. True or False \n 2. Multiple Choice \n 3. Short Answer");
+
+		do {
+			choice = NumberValidator.numberValidator(input);
+			if (choice == 1)
+				database.addTrueFalse(input);
+			else if (choice == 2)
+				database.addMultipleChoice(input);
+			else if (choice == 3)
+				database.addShortAnswer(input);
+			else
+				System.out.println("INVALID. Choose 1 for True or False, 2 for Multiple choice or 3 for Short Answer");
+		} while (choice < 1 || choice > 3);
 	}
 	
 	public static void cheatMenu(TriviaMaze theMaze, TriviaQuestions theQuestions, Player player, Scanner input) {
